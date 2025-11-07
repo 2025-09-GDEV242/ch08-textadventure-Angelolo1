@@ -19,6 +19,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Room previousRoom;
         
     /**
      * Create the game and initialise its internal map.
@@ -118,6 +119,26 @@ public class Game
             case QUIT:
                 wantToQuit = quit(command);
                 break;
+                
+            case LOOK:
+                look();
+                break;
+                
+            case BACK:
+                back();
+                break;
+                
+            case TAKE:
+                takeItem(command);
+                break;
+                
+            case DROP:
+                dropItem(command);
+                break;
+                
+            case INVENTORY:
+                showInventory();
+                break;
         }
         return wantToQuit;
     }
@@ -159,8 +180,24 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
+            previousRoom = currentRoom;
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
+        }
+    }
+    
+    private void look(){
+        System.out.println(currentRoom.getLongDescription());
+    }
+    
+    private void back(){
+        if(previousRoom != null){
+            Room temp = currentRoom;
+            currentRoom = previousRoom;
+            previousRoom = temp;
+            System.out.println(currentRoom.getLongDescription());
+        } else {
+            System.out.println("You can't go back any further!");
         }
     }
 
