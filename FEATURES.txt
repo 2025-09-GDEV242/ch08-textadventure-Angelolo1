@@ -1,0 +1,68 @@
+=====================================
+Text Adventure Game - Feature Summary
+=====================================
+Author: Angelo Martino
+Course: CSIT-242
+
+----------------------------
+A level features implemented
+----------------------------
+
+1. Room Nav
+	- Player can move between rooms that are connected 
+	    using directional commands such as "go north",
+            "go south", "go west", etc.
+	- Each room includes a description and a unique
+	    exit.
+	- The "back" method allow the player to go back a
+	    single rooms at a time.
+
+2. Look Command
+	- Player can use the "look" command to examine the
+	   current room they are in.
+	- The "look" command displays the room's description
+	   and lists any visible items within the room.
+
+3. Item System
+	- Items can be placed in specific rooms.
+	- Each item has their own unique description, name,
+	    and weight.
+	- Items can be picked up when the player uses the
+	    the "take [item]" and dropped using "drop [item]".
+	- Items that are picked up are stored within the
+	    player's inventory
+
+4. Inventory System
+	- The player can check their current items using the
+	    "inventory" command
+	- Items in the inventory can be carried, dropped, or used.
+
+5. Use Command
+	- The player can use an item using the "use [item]; command.
+	- Using an item displays the description and details of that
+	    item used.
+	- Using items works both when the object is in the room, and
+	    when it is in the players current inventory.
+
+6. Help and Quit Commands
+	- "help" list available commands.
+	- "quit" ends the game cleanly.
+
+---------------------------------
+Extra Credit Features Implemented
+---------------------------------
+
+1. Item Interaction and Usage
+	- The "use" command triggers special text or effects depending
+	    on the item used.
+	- Each item have its own unique description and behavior when
+	    used.
+
+2. Backtrack System
+	- The "backtrack" command allows the player to retrace their
+	    steps through multiple rooms instead of going back just
+	    one.
+
+3. Dynamic Room Items
+	- Items are not show in the room description until the player
+	   uses "look", creating a more realistic exploration experience.
