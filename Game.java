@@ -234,12 +234,17 @@ public class Game
      * Takes you back through whole room history (multi-step back)
      */
     private void backtrack(){
-        if(!roomHistory.isEmpty()) {
-            currentRoom = roomHistory.pop();
-            System.out.println(currentRoom.getLongDescription());
-        } else {
+        if(roomHistory.isEmpty()) {
             System.out.println("No more rooms to backtrack to!");
+            return;
         }
+        
+        while (!roomHistory.isEmpty()) {
+            currentRoom = roomHistory.pop();
+        }
+        
+        System.out.println("You have backtracked to the starting room");
+        System.out.println(currentRoom.getLongDescription());
     }
 
     private void takeItem(Command command) {
