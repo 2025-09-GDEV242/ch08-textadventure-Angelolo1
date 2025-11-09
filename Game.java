@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -20,7 +23,9 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private Room previousRoom;
-        
+    private Stack<Room> roomHistory = new Stack<>();
+    private List<String> inventory = new ArrayList<>();     //player's inventory 
+
     /**
      * Create the game and initialise its internal map.
      */
@@ -36,14 +41,14 @@ public class Game
     private void createRooms()
     {
         Room outside, theater, pub, lab, office;
-      
+
         // create the rooms
         outside = new Room("outside the main entrance of the university");
         theater = new Room("in a lecture theater");
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
         office = new Room("in the computing admin office");
-        
+
         // initialise room exits
         outside.setExit("east", theater);
         outside.setExit("south", lab);
@@ -70,7 +75,7 @@ public class Game
 
         // Enter the main command loop.  Here we repeatedly read commands and
         // execute them until the game is over.
-                
+
         boolean finished = false;
         while (! finished) {
             Command command = parser.getCommand();
@@ -119,23 +124,27 @@ public class Game
             case QUIT:
                 wantToQuit = quit(command);
                 break;
-                
+
             case LOOK:
                 look();
                 break;
-                
+
             case BACK:
                 back();
                 break;
-                
+
+            case BACKTRACK:
+                backtrack();
+                break;
+
             case TAKE:
                 takeItem(command);
                 break;
-                
+
             case DROP:
                 dropItem(command);
                 break;
-                
+
             case INVENTORY:
                 showInventory();
                 break;
@@ -162,6 +171,7 @@ public class Game
     /** 
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
+     * @param command The command containing te direction
      */
     private void goRoom(Command command) 
     {
@@ -180,24 +190,89 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
-            previousRoom = currentRoom;
+            previousRoom = currentRoom;     //for back
+            roomHistory.push(currentRoom);  //for backtrack
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
     }
-    
+
+    /**
+     * Prints a description of the current room
+     */
     private void look(){
         System.out.println(currentRoom.getLongDescription());
     }
-    
+
+    /**
+     * Takes you back to the previous room (single-step back)
+     */
     private void back(){
-        if(previousRoom != null){
+        if(previousRoom != null) {
             Room temp = currentRoom;
             currentRoom = previousRoom;
             previousRoom = temp;
             System.out.println(currentRoom.getLongDescription());
         } else {
             System.out.println("You can't go back any further!");
+        }
+    }
+
+    /**
+     * Takes you back through whole room history (multi-step back)
+     */
+    private void backtrack(){
+        if(!roomHistory.isEmpty()) {
+            currentRoom = roomHistory.pop();
+            System.out.println(currentRoom.getLongDescription());
+        } else {
+            System.out.println("No more rooms to backtrack to!");
+        }
+    }
+
+    private void takeItem(Command command) {
+        if(!command.hasSecondWord()) {
+            System.out.println("Take what?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+
+        if(currentRoom.hasItem(itemName)) {
+            inventory.add(itemName);
+            currentRoom.removeItem(itemName);
+            System.out.println("You have take the " + itemName + ".");
+        } else { 
+            System.out.print("There is no " + itemName + " here!");
+
+        }
+    }
+
+    private void dropItem(Command command) {
+        if(!command.hasSecondWord()) {
+            System.out.println("Drop what?");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+
+        if(inventory.contains(itemName)) {
+            inventory.remove(itemName);
+            currentRoom.addItem(itemName);
+            System.out.println("You have dropped the " + itemName + ".");
+        } else {
+            System.out.println("You don't have a " + itemName + "!");
+        }
+    }
+    
+    private void showInventory() {
+        if(inventory.isEmpty()) {
+            System.out.println("Your inventory is empty.");
+        } else {
+            System.out.println("You are carrying:");
+            for(String item : inventory) {
+                System.out.println(" - " + item);
+            }
         }
     }
 
