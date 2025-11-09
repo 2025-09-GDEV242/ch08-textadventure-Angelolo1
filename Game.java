@@ -165,6 +165,10 @@ public class Game
             case DROP:
                 dropItem(command);
                 break;
+                
+            case USE:
+                useItem(command.getSecondWord());
+                break;
 
             case INVENTORY:
                 showInventory();
@@ -228,7 +232,7 @@ public class Game
         } else {
             System.out.println("Items in this room:");
             for(Item item : currentRoom.getItems()) {
-                System.out.println(" - " + item.getName() + ": " + item.getDescription());
+                System.out.println(" - " + item.getName());
             }
         }
     }
@@ -276,7 +280,7 @@ public class Game
         if(item != null) {
             inventory.add(item);
             currentRoom.removeItem(item);
-            System.out.println("You have take the " + item.getName() + ".");
+            System.out.println("You have taken the " + item.getName() + ".");
         } else { 
             System.out.print("There is no " + itemName + " here!");
 
@@ -305,6 +309,20 @@ public class Game
             System.out.println("You have dropped the " + itemToDrop.getName() + ".");
         } else {
             System.out.println("You don't have a " + itemName + "!");
+        }
+    }
+    
+    private void useItem(String itemName) {
+        if(itemName == null) {
+            System.out.println("Use what?");
+            return;
+        }
+        
+        Item item = currentRoom.getItem(itemName);
+        if(item != null) {
+            System.out.println(item.getDescription());
+        } else {
+            System.out.println("There is no " + itemName + " here.");
         }
     }
     
