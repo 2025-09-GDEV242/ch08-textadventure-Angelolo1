@@ -51,15 +51,15 @@ public class Game
         library = new Room("in the university library");
         cafeteria = new Room ("in the campus cafeteria");
         garden = new Room ("in a peaceful university garden.");
-        
+
         // adding items to rooms
-        outside.addItem(new Item("map", "map of the campus"));
-        theater.addItem(new Item("notebook", "your lecture notes"));
-        lab.addItem(new Item("laptop", "your trusty laptop"));
-        pub.addItem(new Item("beer", "a cold beverage"));
-        library.addItem(new Item("book", "a thick textbook"));
-        cafeteria.addItem(new Item("sandwich", "a tasty snack"));
-        garden.addItem(new Item("flower", " a beautiful flower"));
+        Item laptop = new Item("laptop", "A dusty old laptop with a cracked screen.", 2.5);
+        theater.addItem(new Item("notebook", "your lecture notes. Weight: 0.8 lbs"));
+        lab.addItem(new Item("laptop", "your trusty laptop. Weight: 2.5 lbs"));
+        pub.addItem(new Item("beer", "a cold beverage. Weight: 0.3 lbs"));
+        library.addItem(new Item("book", "a thick textbook. Weight: 7 lbs"));
+        cafeteria.addItem(new Item("sandwich", "a tasty snack. Weight: 0.4 lbs"));
+        garden.addItem(new Item("flower", " a beautiful flower. Weight: 0.1 lbs"));
 
         // initialise room exits
         outside.setExit("east", theater);
@@ -69,19 +69,19 @@ public class Game
 
         theater.setExit("west", outside);
         theater.setExit("north", library);
-        
+
         pub.setExit("east", outside);
 
         lab.setExit("north", outside);
         lab.setExit("east", office);
         lab.setExit("south", cafeteria);
-        
+
         office.setExit("west", lab);
-        
+
         library.setExit("south", theater);
-        
+
         cafeteria.setExit("north", lab);
-        
+
         garden.setExit("south", outside);
 
         currentRoom = outside;  // start game outside
@@ -165,7 +165,7 @@ public class Game
             case DROP:
                 dropItem(command);
                 break;
-                
+
             case USE:
                 useItem(command.getSecondWord());
                 break;
@@ -259,11 +259,11 @@ public class Game
             System.out.println("No more rooms to backtrack to!");
             return;
         }
-        
+
         while (!roomHistory.isEmpty()) {
             currentRoom = roomHistory.pop();
         }
-        
+
         System.out.println("You have backtracked to the starting room");
         System.out.println(currentRoom.getLongDescription());
     }
@@ -295,7 +295,7 @@ public class Game
 
         String itemName = command.getSecondWord();
         Item itemToDrop = null;
-        
+
         for(Item item : inventory) {
             if(item.getName().equalsIgnoreCase(itemName)) {
                 itemToDrop = item;
@@ -311,21 +311,42 @@ public class Game
             System.out.println("You don't have a " + itemName + "!");
         }
     }
-    
+
+    private Item findInInventory(String itemName) {
+        if (itemName == null) return null;
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     private void useItem(String itemName) {
-        if(itemName == null) {
+        if(itemName == null || itemName.isEmpty()) {
             System.out.println("Use what?");
             return;
         }
-        
-        Item item = currentRoom.getItem(itemName);
+
+        Item item = findInInventory(itemName);
         if(item != null) {
+            System.out.println("You use the " + item.getName() + ":");
             System.out.println(item.getDescription());
-        } else {
-            System.out.println("There is no " + itemName + " here.");
+            System.out.println("Weight: " + item.getWeight() + " lbs.");
+            return;
+        } 
+
+        item = currentRoom.getItem(itemName);
+        if(item != null) {
+            System.out.println("You used the " + item.getName() + "on the ground:");
+            System.out.println(item.getDescription());
+            System.out.println("Weight: " + item.getWeight());
+            return;
         }
+
+        System.out.println("You don't have a " + itemName + ", and it's not in this room.");
     }
-    
+
     private void showInventory() {
         if(inventory.isEmpty()) {
             System.out.println("Your inventory is empty.");

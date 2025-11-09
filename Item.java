@@ -10,6 +10,7 @@ public class Item
     // fields 
     private String name;
     private String description;
+    private double weight;
 
     /**
      * 
@@ -45,5 +46,16 @@ public class Item
     public String getDescription() 
     {
         return description;
+    }
+    
+    /**
+     * 
+     * Return the weight of the item
+     * 
+     * @return the item weight
+     */
+    public double getWeight()
+    {
+        return weight;
     }
 }
