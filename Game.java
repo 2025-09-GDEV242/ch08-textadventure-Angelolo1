@@ -24,7 +24,7 @@ public class Game
     private Room currentRoom;
     private Room previousRoom;
     private Stack<Room> roomHistory = new Stack<>();
-    private List<String> inventory = new ArrayList<>();     //player's inventory 
+    private List<Item> inventory = new ArrayList<>();     //player's inventory 
 
     /**
      * Create the game and initialise its internal map.
@@ -51,6 +51,15 @@ public class Game
         library = new Room("in the university library");
         cafeteria = new Room ("in the campus cafeteria");
         garden = new Room ("in a peaceful university garden.");
+        
+        // adding items to rooms
+        outside.addItem("map");
+        theater.addItem("notebook");
+        lab.addItem("laptop");
+        pub.addItem("beer");
+        library.addItem("book");
+        cafeteria.addItem("sandwich");
+        garden.addItem("flower");
 
         // initialise room exits
         outside.setExit("east", theater);
@@ -254,11 +263,12 @@ public class Game
         }
 
         String itemName = command.getSecondWord();
+        Item item = currentRoom.getItem(itemName);
 
-        if(currentRoom.hasItem(itemName)) {
-            inventory.add(itemName);
-            currentRoom.removeItem(itemName);
-            System.out.println("You have take the " + itemName + ".");
+        if(item != null) {
+            inventory.add(item);
+            currentRoom.removeItem(item);
+            System.out.println("You have take the " + item.getName() + ".");
         } else { 
             System.out.print("There is no " + itemName + " here!");
 
@@ -272,11 +282,19 @@ public class Game
         }
 
         String itemName = command.getSecondWord();
+        Item itemToDrop = null;
+        
+        for(Item item : inventory) {
+            if(item.getName().equalsIgnoreCase(itemName)) {
+                itemToDrop = item;
+                break;
+            }
+        }
 
-        if(inventory.contains(itemName)) {
-            inventory.remove(itemName);
-            currentRoom.addItem(itemName);
-            System.out.println("You have dropped the " + itemName + ".");
+        if(itemToDrop != null) {
+            inventory.remove(itemToDrop);
+            currentRoom.addItem(itemToDrop);
+            System.out.println("You have dropped the " + itemToDrop.getName() + ".");
         } else {
             System.out.println("You don't have a " + itemName + "!");
         }
@@ -287,8 +305,8 @@ public class Game
             System.out.println("Your inventory is empty.");
         } else {
             System.out.println("You are carrying:");
-            for(String item : inventory) {
-                System.out.println(" - " + item);
+            for(Item item : inventory) {
+                System.out.println(" - " + item.getName() + ": " + item.getDescription());
             }
         }
     }

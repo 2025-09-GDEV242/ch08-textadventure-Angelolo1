@@ -22,7 +22,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private List<String> items = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     /**
      * Create a room described "description". Initially, it has
@@ -61,10 +61,8 @@ public class Room
      *     Exits: north west
      * @return A long description of this room
      */
-    public String getLongDescription()
-    {
-        String itemString = items.isEmpty() ? "" : "\nItems here: " + String.join(", ", items);
-        return "You are " + description + "." + itemString + "\n" + getExitString();
+    public String getLongDescription() {
+        return "You are " + description + ".\n" + getExitString();
     }
 
     /**
@@ -81,36 +79,42 @@ public class Room
         }
         return returnString;
     }
-    
+
     /**
      * Checks if room contains the specified item.
      * @param item The item name to check.
      * @return true if the item is in the room, fasle otherwise.
      */
-    public boolean hasItem(String item) {
-        return items.contains(item);
+    public boolean hasItem(String itemName) {
+        return items.stream().anyMatch(i -> i.getName().equalsIgnoreCase(itemName));
     }
-    
+
     /**
      * Removes the specified item from the room.
      * @param item The item name to remove.
      */
-    public void removeItem(String item) {
-        items.remove(item);
+    public Item removeItem(String itemName) {
+        for (Item i : items) {
+            if(i.getName().equalsIgnoreCase(itemName)) {
+                items.remove(i);
+                return i;
+            }
+        }
+        return null;
     }
-    
+
     /**
      * Adds an item to the room.
      * @param item The item name to add.
      */
-    public void addItem(String item) {
+    public void addItem(Item item) {
         items.add(item);
     }
-    
+
     /**
      * @return a list of items currently in the room.
      */
-    public List<String> getItems() {
+    public List<Item> getItems() {
         return new ArrayList<>(items);
     }
 
