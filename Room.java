@@ -22,7 +22,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private List<Item> items = new ArrayList<>();
+    private List<Item> items;
 
     /**
      * Create a room described "description". Initially, it has
@@ -93,14 +93,8 @@ public class Room
      * Removes the specified item from the room.
      * @param item The item name to remove.
      */
-    public Item removeItem(String itemName) {
-        for (Item i : items) {
-            if(i.getName().equalsIgnoreCase(itemName)) {
-                items.remove(i);
-                return i;
-            }
-        }
-        return null;
+    public void removeItem(Item item) {
+        items.remove(item);
     }
 
     /**
@@ -116,6 +110,15 @@ public class Room
      */
     public List<Item> getItems() {
         return new ArrayList<>(items);
+    }
+    
+    public Item getItem(String name) {
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /**

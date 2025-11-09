@@ -10,7 +10,6 @@ public class Item
     // fields 
     private String name;
     private String description;
-    private double weight;
 
     /**
      * 
@@ -24,7 +23,6 @@ public class Item
     {
         this.name = name;
         this.description = description;
-        this.weight = weight;
     }
 
     /**
@@ -40,26 +38,12 @@ public class Item
     
     /**
      * 
-     * Returns the weight of the item
+     * Return the description of the item
      * 
-     * @return the item weight
+     * @return the item description
      */
-    public double getWeight()
+    public String getDescription() 
     {
-        return weight;
-    }
-    
-    /**
-     * 
-     * Prints detials about items when used.
-     * 
-     */
-    public void use() 
-    {
-        System.out.println("You use the " + name + ".");
-        System.out.println(description);
-        if(weight > 0) {
-            System.out.println("It weighs " + weight + " lbs.");
-        }
+        return description;
     }
 }

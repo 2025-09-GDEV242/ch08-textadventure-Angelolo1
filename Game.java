@@ -53,13 +53,13 @@ public class Game
         garden = new Room ("in a peaceful university garden.");
         
         // adding items to rooms
-        outside.addItem("map");
-        theater.addItem("notebook");
-        lab.addItem("laptop");
-        pub.addItem("beer");
-        library.addItem("book");
-        cafeteria.addItem("sandwich");
-        garden.addItem("flower");
+        outside.addItem(new Item("map", "map of the campus"));
+        theater.addItem(new Item("notebook", "your lecture notes"));
+        lab.addItem(new Item("laptop", "your trusty laptop"));
+        pub.addItem(new Item("beer", "a cold beverage"));
+        library.addItem(new Item("book", "a thick textbook"));
+        cafeteria.addItem(new Item("sandwich", "a tasty snack"));
+        garden.addItem(new Item("flower", " a beautiful flower"));
 
         // initialise room exits
         outside.setExit("east", theater);
@@ -223,6 +223,14 @@ public class Game
      */
     private void look(){
         System.out.println(currentRoom.getLongDescription());
+        if(currentRoom.getItems().isEmpty()) {
+            System.out.println("There are no items here.");
+        } else {
+            System.out.println("Items in this room:");
+            for(Item item : currentRoom.getItems()) {
+                System.out.println(" - " + item.getName() + ": " + item.getDescription());
+            }
+        }
     }
 
     /**
