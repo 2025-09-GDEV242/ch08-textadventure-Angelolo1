@@ -22,7 +22,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private List<String> item = new ArrayList<>();
+    private List<String> items = new ArrayList<>();
 
     /**
      * Create a room described "description". Initially, it has
@@ -63,7 +63,8 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString();
+        String itemString = items.isEmpty() ? "" : "\nItems here: " + String.join(", ", items);
+        return "You are " + description + "." + itemString + "\n" + getExitString();
     }
 
     /**
@@ -104,6 +105,13 @@ public class Room
      */
     public void addItem(String item) {
         items.add(item);
+    }
+    
+    /**
+     * @return a list of items currently in the room.
+     */
+    public List<String> getItems() {
+        return new ArrayList<>(items);
     }
 
     /**
