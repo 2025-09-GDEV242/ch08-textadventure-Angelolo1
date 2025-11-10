@@ -53,13 +53,14 @@ public class Game
         garden = new Room ("in a peaceful university garden.");
 
         // adding items to rooms
-        Item laptop = new Item("laptop", "A dusty old laptop with a cracked screen.", 2.5);
-        theater.addItem(new Item("notebook", "your lecture notes. Weight: 0.8 lbs"));
-        lab.addItem(new Item("laptop", "your trusty laptop. Weight: 2.5 lbs"));
-        pub.addItem(new Item("beer", "a cold beverage. Weight: 0.3 lbs"));
-        library.addItem(new Item("book", "a thick textbook. Weight: 7 lbs"));
-        cafeteria.addItem(new Item("sandwich", "a tasty snack. Weight: 0.4 lbs"));
-        garden.addItem(new Item("flower", " a beautiful flower. Weight: 0.1 lbs"));
+        
+        outside.addItem(new Item("map", "A detailed campus map.", 0.1));
+        theater.addItem(new Item("notebook", "your lecture notes", 1.2));
+        lab.addItem(new Item("laptop", "your trusty laptop", 2.5));
+        pub.addItem(new Item("beer", "a cold beverage", 0.2));
+        library.addItem(new Item("book", "a thick textbook", 7));
+        cafeteria.addItem(new Item("sandwich", "a tasty snack", 0.3));
+        garden.addItem(new Item("flower", " a beautiful flower", 0.1));
 
         // initialise room exits
         outside.setExit("east", theater);
@@ -353,7 +354,8 @@ public class Game
         } else {
             System.out.println("You are carrying:");
             for(Item item : inventory) {
-                System.out.println(" - " + item.getName() + ": " + item.getDescription());
+                System.out.println(" - " + item.getName() + "(Weight: " + item.getWeight() + " lbs) : "
+                + item.getDescription());
             }
         }
     }

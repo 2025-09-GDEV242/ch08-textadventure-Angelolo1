@@ -20,10 +20,11 @@ public class Item
      * @param description a brief description of the item
      * @param weight the weight of the item
      */
-    public Item(String name, String description)
+    public Item(String name, String description, double weight)
     {
         this.name = name;
         this.description = description;
+        this.weight = weight;
     }
 
     /**
@@ -57,5 +58,27 @@ public class Item
     public double getWeight()
     {
         return weight;
+    }
+    
+    /**
+     * 
+     * Simulates using the item and prints its description and weight
+     * 
+     */
+     public void use() {
+        System.out.println("You use the " + name + ".");
+        System.out.println(description);
+        System.out.println("Weight: " + weight + " lbs.");
+    }
+
+    /**
+     * 
+     * Return formatted string containing the item's detials
+     * @return formatted string for display
+     * 
+     */
+    @Override
+    public String toString() {
+        return name + " (" + weight + " lbs) - " + description;
     }
 }
