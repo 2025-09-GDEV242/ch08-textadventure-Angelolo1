@@ -1,6 +1,5 @@
 import java.util.Set;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -33,8 +32,8 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
-        items = new ArrayList<>();
         exits = new HashMap<>();
+        items = new ArrayList<>();
     }
 
     /**
@@ -64,18 +63,19 @@ public class Room
      * @return A long description of this room including exits and items
      */
     public String getLongDescription() {
-        StringBuilder description = newStringBuilder("You are " + description + ".\n");
-        description.append(getExitString());
+        StringBuilder sb = new StringBuilder("You are " + description + ".\n");
+        sb.append(getExitString());
         
         if(!items.isEmpty()) {
-            description.append("\nItems here: ");
+            sb.append("\nItems here: ");
             for(int i= 0; i < items.size(); i++) {
-                description.append(items.get(i).getName());
+                sb.append(items.get(i).getName());
                 if(i < items.size() - 1) {
-                    description.append(", ");
+                    sb.append(", ");
                 }
             }
         }
+        return sb.toString();
     }
 
     /**
@@ -85,12 +85,12 @@ public class Room
      */
     private String getExitString()
     {
-        String returnString = "Exits:";
+        StringBuilder sb = new StringBuilder ("Exits:");
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
-            returnString += " " + exit;
+            sb.append(" ").append(exit);
         }
-        return returnString;
+        return sb.toString();
     }
 
     /**
