@@ -1,6 +1,7 @@
 import java.util.Set;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Class Room - a room in an adventure game.
@@ -20,6 +21,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
+    private ArrayList<Item> items;
 
     /**
      * Create a room described "description". Initially, it has
@@ -31,6 +33,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
+        items = new ArrayList<>();
     }
 
     /**
@@ -56,11 +59,35 @@ public class Room
      * Return a description of the room in the form:
      *     You are in the kitchen.
      *     Exits: north west
-     * @return A long description of this room
+     *     Items; key, apple
+     * @return A long description of this room including exits and items
      */
-    public String getLongDescription()
-    {
-        return "You are " + description + ".\n" + getExitString();
+    public String getLongDescription() {
+        StringBuilder sb = new StringBuilder("You are " + description + ".\n");
+        sb.append(getExitString());
+        sb.append("\n");
+        sb.append(look());
+        return sb.toString();
+    }
+
+    /**
+     * 
+     * Returns a description of the items present in the room
+     * @return A string listing the items, or a message if there are none
+     */
+    public String look() {
+        if(items.isEmpty()) {
+            return "There are no items here.";
+        }
+        
+        StringBuilder sb = new StringBuilder("Items here: ");
+        for (int i = 0; i < items.size(); i++) {
+            sb.append(items.get(i).getName());
+            if (i < items.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -70,12 +97,62 @@ public class Room
      */
     private String getExitString()
     {
-        String returnString = "Exits:";
+        StringBuilder sb = new StringBuilder ("Exits:");
         Set<String> keys = exits.keySet();
         for(String exit : keys) {
-            returnString += " " + exit;
+            sb.append(" ").append(exit);
         }
-        return returnString;
+        return sb.toString();
+    }
+
+    /**
+     * Checks if room contains the specified item.
+     * @param item The item name to check.
+     * @return true if the item is in the room, fasle otherwise.
+     */
+    public boolean hasItem(String itemName) {
+        return items.stream().anyMatch(i -> i.getName().equalsIgnoreCase(itemName));
+    }
+
+    /**
+     * Removes the specified item from the room.
+     * @param item The item name to remove.
+     */
+    public void removeItem(Item item) {
+        items.remove(item);
+    }
+
+    /**
+     * Adds an item to the room.
+     * @param item The item name to add.
+     */
+    public void addItem(Item item) {
+        items.add(item);
+    }
+
+    /**
+     * 
+     * Returns a copy of the list of items currently in the room
+     * 
+     * @return a list of items currently in the room.
+     */
+    public List<Item> getItems() {
+        return new ArrayList<>(items);
+    }
+
+    /**
+     * Returns the tiem with the specified name from the room
+     * 
+     * @param name The name of the item to retrieve
+     * @return The Item object if found, null otherwise
+     */
+    public Item getItem(String name) {
+        for (Item item : items) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     /**
@@ -89,4 +166,3 @@ public class Room
         return exits.get(direction);
     }
 }
-
