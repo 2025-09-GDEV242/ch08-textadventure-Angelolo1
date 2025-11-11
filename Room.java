@@ -65,6 +65,8 @@ public class Room
     public String getLongDescription() {
         StringBuilder sb = new StringBuilder("You are " + description + ".\n");
         sb.append(getExitString());
+        sb.append("\n");
+        sb.append(look());
         return sb.toString();
     }
 
