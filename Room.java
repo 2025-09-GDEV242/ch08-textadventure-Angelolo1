@@ -68,7 +68,11 @@ public class Room
         return sb.toString();
     }
 
-    
+    /**
+     * 
+     * Returns a description of the items present in the room
+     * @return A string listing the items, or a message if there are none
+     */
     public String look() {
         if(items.isEmpty()) {
             return "There are no items here.";
@@ -125,12 +129,21 @@ public class Room
     }
 
     /**
+     * 
+     * Returns a copy of the list of items currently in the room
+     * 
      * @return a list of items currently in the room.
      */
     public List<Item> getItems() {
         return new ArrayList<>(items);
     }
 
+    /**
+     * Returns the tiem with the specified name from the room
+     * 
+     * @param name The name of the item to retrieve
+     * @return The Item object if found, null otherwise
+     */
     public Item getItem(String name) {
         for (Item item : items) {
             if (item.getName().equalsIgnoreCase(name)) {
