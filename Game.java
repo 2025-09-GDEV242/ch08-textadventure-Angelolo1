@@ -21,17 +21,15 @@ import java.util.Stack;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
-    private Room previousRoom;
-    private Stack<Room> roomHistory = new Stack<>();
-    private List<Item> inventory = new ArrayList<>();     //player's inventory 
+    private Player player;//player's inventory 
 
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        createRooms();
+        Room startingRoom = createRooms();
+        player = new Player(startingRoom);
         parser = new Parser();
     }
 
@@ -85,7 +83,7 @@ public class Game
 
         garden.setExit("south", outside);
 
-        currentRoom = outside;  // start game outside
+        return outside;  // start game outside
     }
 
     /**
@@ -164,7 +162,7 @@ public class Game
                 break;
 
             case DROP:
-                dropItem(command);
+                removeItem(command);
                 break;
 
             case USE:
@@ -210,16 +208,14 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            previousRoom = currentRoom;     //for back
-            roomHistory.push(currentRoom);  //for backtrack
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            player.setCurrentRoom(nextRoom);
+            System.out.println(player.getCurrentRoom().getLongDescription());
         }
     }
 
@@ -227,46 +223,16 @@ public class Game
      * Prints a description of the current room
      */
     private void look(){
+        Room currentRoom = player.getCurrentRoom();
         System.out.println(currentRoom.getLongDescription());
-        if(currentRoom.getItems().isEmpty()) {
-            System.out.println("There are no items here.");
-        } else {
-            System.out.println("Items in this room:");
-            for(Item item : currentRoom.getItems()) {
-                System.out.println(" - " + item.getName());
-            }
-        }
     }
-
-    /**
-     * Takes you back to the previous room (single-step back)
-     */
-    private void back(){
-        if(previousRoom != null) {
-            Room temp = currentRoom;
-            currentRoom = previousRoom;
-            previousRoom = temp;
-            System.out.println(currentRoom.getLongDescription());
-        } else {
-            System.out.println("You can't go back any further!");
-        }
+    
+    private void back() {
+        player.back();
     }
-
-    /**
-     * Takes you back through whole room history (multi-step back)
-     */
-    private void backtrack(){
-        if(roomHistory.isEmpty()) {
-            System.out.println("No more rooms to backtrack to!");
-            return;
-        }
-
-        while (!roomHistory.isEmpty()) {
-            currentRoom = roomHistory.pop();
-        }
-
-        System.out.println("You have backtracked to the starting room");
-        System.out.println(currentRoom.getLongDescription());
+    
+    private void backtrack() {
+        player.backtrack();
     }
 
     private void takeItem(Command command) {
@@ -275,11 +241,12 @@ public class Game
             return;
         }
 
+        Room currentRoom = player.getCurrentRoom();
         String itemName = command.getSecondWord();
         Item item = currentRoom.getItem(itemName);
 
         if(item != null) {
-            inventory.add(item);
+            player.addItem(item);
             currentRoom.removeItem(item);
             System.out.println("You have taken the " + item.getName() + ".");
         } else { 
@@ -288,40 +255,23 @@ public class Game
         }
     }
 
-    private void dropItem(Command command) {
+    private void removeItem(Command command) {
         if(!command.hasSecondWord()) {
             System.out.println("Drop what?");
             return;
         }
 
         String itemName = command.getSecondWord();
-        Item itemToDrop = null;
+        Item item = player.findInInventory(itemName);
 
-        for(Item item : inventory) {
-            if(item.getName().equalsIgnoreCase(itemName)) {
-                itemToDrop = item;
-                break;
+        if(item != null) {
+            player.removeItem(item);
+            player.getCurrentRoom().addItem(item);
+            System.out.println("You have dropped the " + item.getName() + ".");
+            } else {
+                System.out.println("You don't have a " + itemName + "!");
             }
         }
-
-        if(itemToDrop != null) {
-            inventory.remove(itemToDrop);
-            currentRoom.addItem(itemToDrop);
-            System.out.println("You have dropped the " + itemToDrop.getName() + ".");
-        } else {
-            System.out.println("You don't have a " + itemName + "!");
-        }
-    }
-
-    private Item findInInventory(String itemName) {
-        if (itemName == null) return null;
-        for (Item item : inventory) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                return item;
-            }
-        }
-        return null;
-    }
 
     private void useItem(String itemName) {
         if(itemName == null || itemName.isEmpty()) {
@@ -329,19 +279,16 @@ public class Game
             return;
         }
 
-        Item item = findInInventory(itemName);
+        Item item = player.findInInventory(itemName);
         if(item != null) {
-            System.out.println("You use the " + item.getName() + ":");
-            System.out.println(item.getDescription());
-            System.out.println("Weight: " + item.getWeight() + " lbs.");
+            item.use();
             return;
         } 
 
+        Room currentRoom = player.getCurrentRoom();
         item = currentRoom.getItem(itemName);
         if(item != null) {
-            System.out.println("You used the " + item.getName() + "on the ground:");
-            System.out.println(item.getDescription());
-            System.out.println("Weight: " + item.getWeight());
+            item.use();
             return;
         }
 
@@ -349,15 +296,7 @@ public class Game
     }
 
     private void showInventory() {
-        if(inventory.isEmpty()) {
-            System.out.println("Your inventory is empty.");
-        } else {
-            System.out.println("You are carrying:");
-            for(Item item : inventory) {
-                System.out.println(" - " + item.getName() + "(Weight: " + item.getWeight() + " lbs) : "
-                + item.getDescription());
-            }
-        }
+        player.showInventory();
     }
 
     /** 
