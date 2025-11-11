@@ -51,7 +51,7 @@ public class Game
         garden = new Room ("in a peaceful university garden.");
 
         // adding items to rooms
-        
+
         outside.addItem(new Item("map", "A detailed campus map.", 0.1));
         theater.addItem(new Item("notebook", "your lecture notes", 1.2));
         lab.addItem(new Item("laptop", "your trusty laptop", 2.5));
@@ -226,15 +226,29 @@ public class Game
         Room currentRoom = player.getCurrentRoom();
         System.out.println(currentRoom.look());
     }
-    
+
+    /**
+     * 
+     * Moves the player to the previous room in their history
+     * If no previous rooms, message prints
+     */
     private void back() {
         player.back();
     }
-    
+
+    /**
+     * 
+     * Moves the player through multiple rooms in their history
+     */
     private void backtrack() {
         player.backtrack();
     }
 
+    /**
+     * 
+     * Allows the player to take items from the current room and add to their inventory
+     * @param command The command containing the item to take
+     */
     private void takeItem(Command command) {
         if(!command.hasSecondWord()) {
             System.out.println("Take what?");
@@ -255,6 +269,11 @@ public class Game
         }
     }
 
+    /**
+     * 
+     * Drops an item from the players intventory into the current room
+     * @param command The command containing the name of the item to drop
+     */
     private void removeItem(Command command) {
         if(!command.hasSecondWord()) {
             System.out.println("Drop what?");
@@ -268,11 +287,16 @@ public class Game
             player.removeItem(item);
             player.getCurrentRoom().addItem(item);
             System.out.println("You have dropped the " + item.getName() + ".");
-            } else {
-                System.out.println("You don't have a " + itemName + "!");
-            }
+        } else {
+            System.out.println("You don't have a " + itemName + "!");
         }
+    }
 
+    /**
+     * 
+     * Uses an item either from the player's inventory or the room
+     * @param itemName The name of the item to use
+     */
     private void useItem(String itemName) {
         if(itemName == null || itemName.isEmpty()) {
             System.out.println("Use what?");
@@ -295,6 +319,10 @@ public class Game
         System.out.println("You don't have a " + itemName + ", and it's not in this room.");
     }
 
+    /**
+     * 
+     * Displays the players current inventory
+     */
     private void showInventory() {
         player.showInventory();
     }
