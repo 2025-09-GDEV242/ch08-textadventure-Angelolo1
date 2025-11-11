@@ -53,7 +53,7 @@ public class Player
     /**
      * Takes you back to the previous room (single-step back)
      */
-    private void back(){
+    public void back(){
         if(roomHistory.isEmpty()) {
             System.out.println("You can't go back any further!");
         } else {
@@ -65,7 +65,7 @@ public class Player
     /**
      * Takes you back through whole room history (multi-step back)
      */
-    private void backtrack(){
+    public void backtrack(){
         if(roomHistory.isEmpty()) {
             System.out.println("No more rooms to backtrack to!");
             return;
