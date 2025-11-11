@@ -65,14 +65,19 @@ public class Room
     public String getLongDescription() {
         StringBuilder sb = new StringBuilder("You are " + description + ".\n");
         sb.append(getExitString());
+        return sb.toString();
+    }
+
+    public String look() {
+        if(items.isEmpty()) {
+            return "There are no items here.";
+        }
         
-        if(!items.isEmpty()) {
-            sb.append("\nItems here: ");
-            for(int i= 0; i < items.size(); i++) {
-                sb.append(items.get(i).getName());
-                if(i < items.size() - 1) {
-                    sb.append(", ");
-                }
+        StringBuilder sb = new StringBuilder("Items here: ");
+        for (int i = 0; i < items.size(); i++) {
+            sb.append(items.get(i).getName());
+            if (i < items.size() - 1) {
+                sb.append(", ");
             }
         }
         return sb.toString();
@@ -124,7 +129,7 @@ public class Room
     public List<Item> getItems() {
         return new ArrayList<>(items);
     }
-    
+
     public Item getItem(String name) {
         for (Item item : items) {
             if (item.getName().equalsIgnoreCase(name)) {

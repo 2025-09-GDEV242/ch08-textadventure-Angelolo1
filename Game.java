@@ -224,7 +224,7 @@ public class Game
      */
     private void look(){
         Room currentRoom = player.getCurrentRoom();
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(currentRoom.look());
     }
     
     private void back() {
